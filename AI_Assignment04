@@ -1,1 +1,57 @@
 
+import math
+
+NEG_INF = -math.inf
+POS_INF = math.inf
+
+def alpha_beta_pruning(depth, node_index, alpha, beta, maximize, values):
+    if depth == 3:
+        return values[node_index]
+
+    if maximize:
+        best_value = NEG_INF
+        for i in range(2):
+            value = alpha_beta_pruning(depth + 1, node_index * 2 + i, alpha, beta, False, values)
+            best_value = max(best_value, value)
+            alpha = max(alpha, best_value)
+            if beta <= alpha:
+                break
+        return best_value
+
+    else:
+        best_value = POS_INF
+        for i in range(2):
+            value = alpha_beta_pruning(depth + 1, node_index * 2 + i, alpha, beta, True, values)
+            best_value = min(best_value, value)
+            beta = min(beta, best_value)
+            if beta <= alpha:
+                break
+        return best_value
+
+def minimax_algorithm(depth, node_index, maximize, values):
+    if depth == 3:
+        return values[node_index]
+
+    if maximize:
+        best_value = NEG_INF
+        for i in range(2):
+            value = minimax_algorithm(depth + 1, node_index * 2 + i, False, values)
+            best_value = max(best_value, value)
+        return best_value
+
+    else:
+        best_value = POS_INF
+        for i in range(2):
+            value = minimax_algorithm(depth + 1, node_index * 2 + i, True, values)
+            best_value = min(best_value, value)
+        return best_value
+
+if __name__ == "__main__":
+    input_values = [5, 7, 6, 3, 2, 1, -2, 4]
+    minimax_result = minimax_algorithm(0, 0, True, input_values)
+    print("Result via MiniMax algorithm:", minimax_result)
+    alpha_beta_result = alpha_beta_pruning(0, 0, NEG_INF, POS_INF, True, input_values)
+    print("Result via Alpha-Beta Pruning:", alpha_beta_result)
+
+
+
